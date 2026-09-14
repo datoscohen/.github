@@ -1,0 +1,54 @@
+# Esqueleto de referencia para un issue form de la organización.
+# Copiar a .github/ISSUE_TEMPLATE/<nombre>.yml y borrar lo que no aplique.
+
+name: Nombre visible en el selector
+description: Una línea que explique cuándo usar este formulario.
+title: "[Prefijo]: "
+labels: ["label-existente"]
+# type: Bug   # descomentar si la organización tiene issue types definidos
+
+body:
+  - type: checkboxes
+    id: duplicate-check
+    attributes:
+      label: ¿Ya buscaste si existe?
+      options:
+        - label: Busqué en los issues existentes y no encontré uno igual.
+          required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Descripción
+      description: Qué pasa y por qué importa.
+      placeholder: Contanos el problema en dos o tres líneas.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impacto
+      options:
+        - Bloqueante
+        - Alto
+        - Medio
+        - Bajo
+      default: 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs o evidencia
+      description: Se formatea como bloque de código automáticamente.
+      render: shell
+    # Ojo: un textarea con `render` no puede ser required.
+
+  - type: upload
+    id: screenshots
+    attributes:
+      label: Capturas
+    validations:
+      required: false

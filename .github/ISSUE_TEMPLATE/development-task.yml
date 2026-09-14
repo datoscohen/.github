@@ -1,0 +1,49 @@
+name: Tarea de desarrollo
+description: Trabajo de implementación ya priorizado y refinado. Si todavía es un pedido a evaluar, usá "Solicitud de feature".
+title: "[Tarea]: "
+type: Task
+
+body:
+  - type: checkboxes
+    id: duplicate-check
+    attributes:
+      label: ¿Ya buscaste si existe?
+      options:
+        - label: Busqué en los issues existentes y no encontré una tarea igual.
+          required: true
+
+  - type: input
+    id: affected-system
+    attributes:
+      label: Sistema o repo
+      description: Dónde se implementa el cambio.
+      placeholder: api-ordenes
+    validations:
+      required: true
+
+  - type: textarea
+    id: work-description
+    attributes:
+      label: Descripción del trabajo
+      description: Qué hay que hacer. Como la tarea ya está refinada, sé concreto sobre el alcance.
+      placeholder: Agregar el endpoint POST /ordenes/export que devuelva el listado filtrado en CSV.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Criterios de aceptación
+      description: Condiciones verificables que definen que la tarea está terminada.
+      placeholder: |
+        - [ ] El endpoint responde 200 con el CSV generado.
+        - [ ] Se respetan los permisos del usuario autenticado.
+    validations:
+      required: true
+
+  - type: input
+    id: related-issue
+    attributes:
+      label: Épico o issue relacionado
+      description: Link al issue padre, épico o ticket de origen.
+      placeholder: "#123"

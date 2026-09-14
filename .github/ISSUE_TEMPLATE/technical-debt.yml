@@ -1,0 +1,68 @@
+name: Deuda técnica
+description: Registrar un refactor, upgrade o limpieza pendiente que hoy nos está costando tiempo o riesgo.
+title: "[Deuda]: "
+type: "Technical debt"
+
+body:
+  - type: checkboxes
+    id: duplicate-check
+    attributes:
+      label: ¿Ya buscaste si existe?
+      options:
+        - label: Busqué en los issues existentes y no encontré uno igual.
+          required: true
+
+  - type: input
+    id: affected-component
+    attributes:
+      label: Sistema o componente
+      description: Repo, servicio o módulo donde vive la deuda.
+      placeholder: api-ordenes / módulo de conciliación
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-state
+    attributes:
+      label: Situación actual
+      description: Qué está mal hoy y, si lo sabés, por qué se llegó a eso.
+      placeholder: La conciliación corre sobre un script que duplica la lógica del servicio y hay que sincronizar los cambios a mano.
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impacto de no hacerlo
+      description: Qué duele concretamente — tiempo perdido, bugs recurrentes, riesgo operativo o de seguridad, costo de infraestructura.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: debt-category
+    attributes:
+      label: Categoría
+      options:
+        - Refactor de código
+        - Upgrade de dependencia o runtime
+        - Migración de plataforma o infraestructura
+        - Código muerto o sin uso
+        - Tests o observabilidad faltantes
+        - Otro
+      default: 0
+
+  - type: textarea
+    id: proposed-remediation
+    attributes:
+      label: Propuesta de remediación
+      description: Cómo debería quedar. Si se puede partir en etapas, indicá cuáles.
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: Urgencia
+      options:
+        - Alta — hay una fecha dura (EOL, fin de soporte, auditoría)
+        - Media — bloquea trabajo planificado del trimestre
+        - Baja — conviene hacerlo, sin fecha asociada
+      default: 2

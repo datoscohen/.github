@@ -1,0 +1,52 @@
+name: Solicitud de acceso
+description: Pedir el alta, el cambio de rol o la baja de un acceso a un sistema interno.
+title: "[Acceso]: "
+type: Task
+
+body:
+  - type: checkboxes
+    id: preflight-check
+    attributes:
+      label: Antes de enviar
+      options:
+        - label: Busqué en los issues existentes y no encontré una solicitud igual.
+          required: true
+        - label: No incluí contraseñas, tokens, claves ni datos personales de terceros en este issue.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        > [!WARNING]
+        > Este issue puede quedar **visible públicamente** según el repositorio donde lo abras.
+        > Describí el acceso en términos funcionales y no pegues credenciales, hostnames internos ni capturas con datos sensibles.
+        > Si la solicitud involucra información confidencial, gestionala por el canal privado del equipo de Seguridad.
+
+  - type: input
+    id: requested-system
+    attributes:
+      label: Sistema solicitado
+      description: Aplicación o plataforma sobre la que pedís el acceso.
+      placeholder: Back office de operaciones
+    validations:
+      required: true
+
+  - type: dropdown
+    id: request-type
+    attributes:
+      label: Tipo de solicitud
+      options:
+        - Alta — no tengo acceso hoy
+        - Cambio de rol — tengo acceso pero necesito otro perfil
+        - Baja o revocación — hay que quitar un acceso
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: business-justification
+    attributes:
+      label: Justificación
+      description: Para qué tarea concreta lo necesitás y por cuánto tiempo. Si es un acceso temporal, indicá la fecha de vencimiento.
+    validations:
+      required: true

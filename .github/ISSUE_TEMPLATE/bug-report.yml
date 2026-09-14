@@ -1,0 +1,55 @@
+name: Reporte de bug
+description: Algo no funciona como debería en una aplicación o servicio del equipo.
+title: "[Bug]: "
+type: Bug
+
+body:
+  - type: checkboxes
+    id: duplicate-check
+    attributes:
+      label: ¿Ya buscaste si existe?
+      options:
+        - label: Busqué en los issues existentes y no encontré uno igual.
+          required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Descripción
+      description: Qué pasa, dónde pasa y qué se rompe por eso.
+      placeholder: Al confirmar una orden en el back office, la pantalla queda cargando y la orden no se registra.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Pasos para reproducir
+      description: Numerá los pasos exactos desde un estado conocido. Incluí usuario, entorno y datos de prueba si hacen falta.
+      placeholder: |
+        1. Entrar a ... con un usuario ...
+        2. Hacer clic en ...
+        3. Ver el error ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severidad
+      description: Cuánto impacta hoy en la operación.
+      options:
+        - Bloqueante — no hay workaround y frena la operación
+        - Alta — afecta a varios usuarios o hay workaround costoso
+        - Media — molesta pero hay workaround
+        - Baja — cosmético o caso borde
+      default: 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs o evidencia
+      description: Mensajes de error, stack traces o IDs de request. Se formatea como bloque de código.
+      render: shell

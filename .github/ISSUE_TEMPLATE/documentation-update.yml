@@ -1,0 +1,43 @@
+name: Actualizar documentación
+description: Documentación faltante, desactualizada, confusa o con errores.
+title: "[Docs]: "
+type: Task
+
+body:
+  - type: checkboxes
+    id: duplicate-check
+    attributes:
+      label: ¿Ya buscaste si existe?
+      options:
+        - label: Busqué en los issues existentes y no encontré uno igual.
+          required: true
+
+  - type: input
+    id: doc-location
+    attributes:
+      label: Dónde está la documentación
+      description: URL, ruta del archivo en el repo o nombre del espacio en Confluence. Si no existe todavía, indicá dónde debería vivir.
+      placeholder: https://... o docs/onboarding.md
+    validations:
+      required: true
+
+  - type: dropdown
+    id: problem-type
+    attributes:
+      label: Tipo de problema
+      options:
+        - No existe — hay que escribirla desde cero
+        - Desactualizada — ya no refleja cómo funciona hoy
+        - Incorrecta — tiene errores que llevan a equivocarse
+        - Confusa o incompleta — está pero no alcanza
+      default: 1
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-to-fix
+    attributes:
+      label: Qué hay que corregir
+      description: Qué dice hoy y qué debería decir. Citá el fragmento puntual si aplica.
+    validations:
+      required: true

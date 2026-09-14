@@ -1,0 +1,68 @@
+name: Solicitud de feature
+description: Proponer una funcionalidad nueva o una mejora a evaluar. Si el trabajo ya está priorizado, usá "Tarea de desarrollo".
+title: "[Feature]: "
+type: Feature
+
+body:
+  - type: checkboxes
+    id: duplicate-check
+    attributes:
+      label: ¿Ya buscaste si existe?
+      options:
+        - label: Busqué en los issues existentes y no encontré un pedido igual.
+          required: true
+
+  - type: input
+    id: affected-system
+    attributes:
+      label: Sistema o aplicación
+      description: Sobre qué producto, servicio o repo aplica el pedido.
+      placeholder: Back office de operaciones
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema o necesidad
+      description: Qué problema real resuelve. Describí la situación actual, no la solución.
+      placeholder: Hoy el equipo de mesa exporta las órdenes a mano todas las mañanas y tarda cerca de una hora.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Solución propuesta
+      description: Qué debería pasar. Si evaluaste alternativas, mencionalas acá.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Criterios de aceptación
+      description: Opcional. Cómo sabemos que está terminado. Si no lo tenés claro, lo definimos en el refinamiento.
+      placeholder: |
+        - [ ] El usuario puede exportar el listado filtrado a CSV.
+        - [ ] La exportación respeta los permisos del usuario.
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridad
+      description: Qué tan urgente es desde el punto de vista del negocio.
+      options:
+        - Crítica — hay un compromiso externo o regulatorio con fecha
+        - Alta — bloquea un objetivo del trimestre
+        - Media — mejora relevante, sin fecha dura
+        - Baja — nice to have
+      default: 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Contexto adicional
+      description: Fechas límite, dependencias, normativa, links a documentos o capturas.
