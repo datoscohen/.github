@@ -4,20 +4,21 @@ title: "[Feature]: "
 type: Feature
 
 body:
-  - type: checkboxes
-    id: duplicate-check
-    attributes:
-      label: ¿Ya buscaste si existe?
-      options:
-        - label: Busqué en los issues existentes y no encontré un pedido igual.
-          required: true
-
   - type: input
     id: affected-system
     attributes:
       label: Sistema o aplicación
       description: Sobre qué producto, servicio o repo aplica el pedido.
       placeholder: Back office de operaciones
+    validations:
+      required: true
+
+  - type: input
+    id: requested-by
+    attributes:
+      label: Quién lo pide
+      description: Persona, área o cliente que originó el pedido. Si viene de un cliente externo, usá el identificador interno de la cuenta en lugar de datos personales.
+      placeholder: Gerencia de operaciones / Pepe Pirulano
     validations:
       required: true
 

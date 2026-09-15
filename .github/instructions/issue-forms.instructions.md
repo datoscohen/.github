@@ -37,7 +37,8 @@ Obligatorias: `name`, `description`, `body`.
 
 - Poné `id` explícito y en inglés kebab-case a **todo** elemento que capture datos. Los `id` son el contrato para automatizaciones futuras; cambiarlos rompe workflows.
 - Los `id` deben ser únicos dentro del archivo y contener solo alfanuméricos, `-` y `_`.
-- Primer elemento: un `checkboxes` con "Busqué issues existentes" (`required: true`). Segundo: `markdown` de bienvenida solo si aporta algo.
+- **No** agregues checkboxes de "busqué duplicados": todos los tildan sin leer y solo suman fricción. Reservá los `checkboxes` obligatorios para confirmaciones con consecuencia real (por ejemplo, no pegar credenciales).
+- Usá `markdown` solo si aporta algo; nunca como bienvenida decorativa.
 - Mantené los formularios cortos: si un campo no cambia la decisión de triage, no va.
 - Textos en español; `id` y nombre de archivo en inglés.
 

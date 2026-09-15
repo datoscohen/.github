@@ -4,14 +4,6 @@ title: "[Bug]: "
 type: Bug
 
 body:
-  - type: checkboxes
-    id: duplicate-check
-    attributes:
-      label: ¿Ya buscaste si existe?
-      options:
-        - label: Busqué en los issues existentes y no encontré uno igual.
-          required: true
-
   - type: textarea
     id: summary
     attributes:
@@ -46,6 +38,13 @@ body:
       default: 2
     validations:
       required: true
+
+  - type: input
+    id: reported-by
+    attributes:
+      label: Quién lo reportó
+      description: Si el bug lo detectó otra persona o llegó por un canal de soporte, indicá el área o el identificador interno del caso. No pongas datos personales de clientes.
+      placeholder: Mesa de operaciones / Pepe Pirulano
 
   - type: textarea
     id: logs

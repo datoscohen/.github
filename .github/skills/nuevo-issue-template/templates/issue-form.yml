@@ -8,14 +8,6 @@ labels: ["label-existente"]
 # type: Bug   # descomentar si la organización tiene issue types definidos
 
 body:
-  - type: checkboxes
-    id: duplicate-check
-    attributes:
-      label: ¿Ya buscaste si existe?
-      options:
-        - label: Busqué en los issues existentes y no encontré uno igual.
-          required: true
-
   - type: textarea
     id: summary
     attributes:

@@ -4,14 +4,6 @@ title: "[Docs]: "
 type: Task
 
 body:
-  - type: checkboxes
-    id: duplicate-check
-    attributes:
-      label: ¿Ya buscaste si existe?
-      options:
-        - label: Busqué en los issues existentes y no encontré uno igual.
-          required: true
-
   - type: input
     id: doc-location
     attributes:

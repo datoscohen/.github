@@ -4,14 +4,6 @@ title: "[Tarea]: "
 type: Task
 
 body:
-  - type: checkboxes
-    id: duplicate-check
-    attributes:
-      label: ¿Ya buscaste si existe?
-      options:
-        - label: Busqué en los issues existentes y no encontré una tarea igual.
-          required: true
-
   - type: input
     id: affected-system
     attributes:

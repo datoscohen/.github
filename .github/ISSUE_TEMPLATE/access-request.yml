@@ -9,8 +9,6 @@ body:
     attributes:
       label: Antes de enviar
       options:
-        - label: Busqué en los issues existentes y no encontré una solicitud igual.
-          required: true
         - label: No incluí contraseñas, tokens, claves ni datos personales de terceros en este issue.
           required: true
 
