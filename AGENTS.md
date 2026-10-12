@@ -2,7 +2,7 @@
 
 Este repo **no contiene código de aplicación**. Su función es definir **parametría global de GitHub para toda la organización**: archivos *community health* por defecto, plantillas de issues y PR, y la portada pública de la organización.
 
-Todo lo que se mergea a la rama por defecto queda **activo de inmediato en todos los repos de la organización**. No hay build, deploy ni tests. Tratá cada cambio como un cambio de producción: PR + revisión.
+Todo lo que se mergea a `master` queda **activo de inmediato en todos los repos de la organización**. No hay build, deploy ni tests. Tratá cada cambio como un cambio de producción: PR + revisión.
 
 ## Cómo funcionan los defaults de la organización
 
@@ -13,6 +13,16 @@ Todo lo que se mergea a la rama por defecto queda **activo de inmediato en todos
 - No se puede definir un `LICENSE` por defecto. Va repo por repo.
 
 Referencia: [Creating a default community health file](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file).
+
+## Entorno
+
+No hay aplicación, entorno de ejecución ni contenedor que levantar. Los cambios se limitan a la configuración y documentación de GitHub.
+
+## Flujo Git
+
+- Crear ramas `issue/<n>` desde `dev` y abrir los PRs de trabajo hacia `dev`.
+- Cuando el cambio llega a `master`, queda activo como default de la organización.
+- Seguir las skills del plugin para crear, trabajar y cerrar issues.
 
 ## Ubicaciones obligatorias
 
@@ -46,3 +56,7 @@ No hay linter ni CI todavía. Antes de proponer un cambio:
 3. Recordá que GitHub muestra los errores de validación de los issue forms como un banner en la pestaña **Issues**, no en el PR.
 
 Para trabajar sobre `.github/ISSUE_TEMPLATE/**` seguí también [issue-forms.instructions.md](.github/instructions/issue-forms.instructions.md).
+
+## Skills del plugin
+
+Usá las skills del plugin para crear, trabajar y cerrar issues. Las instrucciones específicas de este repo están en [repo.instructions.md](.github/instructions/repo.instructions.md).
