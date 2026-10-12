@@ -65,5 +65,5 @@ body:
   - type: textarea
     id: additional-context
     attributes:
-      label: Contexto adicional
-      description: Fechas límite, dependencias, normativa, links a documentos o capturas.
+      label: Contexto y supuestos
+      description: Opcional. Antecedentes, supuestos sin confirmar, dependencias o links que ayuden a entender el pedido.

@@ -39,3 +39,9 @@ body:
       label: Épico o issue relacionado
       description: Link al issue padre, épico o ticket de origen.
       placeholder: "#123"
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Contexto y supuestos
+      description: Opcional. Antecedentes, supuestos sin confirmar, dependencias o links que ayuden a entender el pedido.

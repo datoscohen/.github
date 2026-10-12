@@ -48,3 +48,9 @@ body:
       description: Para qué tarea concreta lo necesitás y por cuánto tiempo. Si es un acceso temporal, indicá la fecha de vencimiento.
     validations:
       required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Contexto y supuestos
+      description: Opcional. Antecedentes, supuestos sin confirmar, dependencias o links que ayuden a entender el pedido.
