@@ -52,3 +52,9 @@ body:
       label: Logs o evidencia
       description: Mensajes de error, stack traces o IDs de request. Se formatea como bloque de código.
       render: shell
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Contexto y supuestos
+      description: Opcional. Antecedentes, supuestos sin confirmar, dependencias o links que ayuden a entender el pedido.

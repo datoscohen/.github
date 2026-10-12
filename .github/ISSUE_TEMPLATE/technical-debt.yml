@@ -58,3 +58,9 @@ body:
         - Media — bloquea trabajo planificado del trimestre
         - Baja — conviene hacerlo, sin fecha asociada
       default: 2
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Contexto y supuestos
+      description: Opcional. Antecedentes, supuestos sin confirmar, dependencias o links que ayuden a entender el pedido.

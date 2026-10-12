@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "datoscohen": {
+      "source": {
+        "source": "github",
+        "repo": "datoscohen/AgentToolkit"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "skills-comunes@datoscohen": true
+  }
+}

@@ -33,3 +33,9 @@ body:
       description: Qué dice hoy y qué debería decir. Citá el fragmento puntual si aplica.
     validations:
       required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Contexto y supuestos
+      description: Opcional. Antecedentes, supuestos sin confirmar, dependencias o links que ayuden a entender el pedido.
