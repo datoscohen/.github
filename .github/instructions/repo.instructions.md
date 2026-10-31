@@ -9,7 +9,7 @@ description: 'Datos propios de .github para las skills comunes: repo, rama, ento
 | `Repo` | `datoscohen/.github` |
 | `Rama de trabajo` | `issue/<n>` |
 | `Entorno` | `Agents` |
-| `Versión del plugin` | `0.17.0` |
+| `Versión del plugin` | `0.32.0` |
 
 ## Validación
 
