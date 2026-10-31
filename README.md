@@ -4,7 +4,7 @@ Este repositorio público mantiene los archivos de salud de proyecto por defecto
 
 ## Qué contiene
 
-GitHub usa estos defaults en los repositorios de la organización que no tienen su propio archivo del mismo tipo. Los issue templates son todo-o-nada: cualquier template propio reemplaza el conjunto completo de defaults.
+GitHub usa estos defaults en los repositorios de la organización que no tienen su propio archivo del mismo tipo. Los issue templates son todo-o-nada: cualquier template propio reemplaza el conjunto completo de defaults. Además, aloja workflows reutilizables de GitHub Actions en `.github/workflows/` para automatizaciones comunes de la organización.
 
 ## Contribuir
 
