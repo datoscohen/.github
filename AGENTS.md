@@ -1,6 +1,6 @@
 # Repositorio `.github` de la organización Cohen
 
-Este repo **no contiene código de aplicación**. Su función es definir **parametría global de GitHub para toda la organización**: archivos *community health* por defecto, plantillas de issues y PR, y la portada pública de la organización.
+Este repo **no contiene código de aplicación**. Su función es definir **parametría global de GitHub y workflows reutilizables para toda la organización**: archivos *community health* por defecto, plantillas de issues y PR, la portada pública de la organización y workflows reutilizables de GitHub Actions en `.github/workflows/`.
 
 Todo lo que se mergea a `master` queda **activo de inmediato en todos los repos de la organización**. No hay build, deploy ni tests. Tratá cada cambio como un cambio de producción: PR + revisión.
 
@@ -30,6 +30,7 @@ Estas rutas son impuestas por GitHub y **no son negociables**:
 
 | Contenido | Ruta exacta |
 |---|---|
+| Workflows reutilizables de la organización | `.github/workflows/` |
 | Issue forms y su configuración | `.github/ISSUE_TEMPLATE/` |
 | Formularios de discusiones | `.github/DISCUSSION_TEMPLATE/` |
 | Botón de sponsor | `.github/FUNDING.yml` |

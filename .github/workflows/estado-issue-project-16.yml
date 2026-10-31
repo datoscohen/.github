@@ -1,0 +1,256 @@
+name: Estado de issue en Project 16
+
+on:
+  workflow_call:
+    inputs:
+      formato_rama:
+        description: 'Formato de rama del repositorio con <n> (ej. "issue/<n>")'
+        required: true
+        type: string
+    secrets:
+      PROJECT_16_APP_ID:
+        description: 'ID de la GitHub App con permisos sobre Project 16'
+        required: false
+      PROJECT_16_APP_PRIVATE_KEY:
+        description: 'Clave privada de la GitHub App con permisos sobre Project 16'
+        required: false
+  pull_request:
+    branches:
+      - dev
+    types:
+      - opened
+      - reopened
+      - ready_for_review
+      - closed
+
+permissions: {}
+
+jobs:
+  actualizar-estado:
+    name: Actualizar estado de issue
+    runs-on: ubuntu-latest
+    steps:
+      - name: Evaluar evento y determinar estado objetivo
+        id: evaluar
+        env:
+          PR_ACTION: ${{ github.event.action }}
+          PR_DRAFT: ${{ github.event.pull_request.draft }}
+          PR_MERGED: ${{ github.event.pull_request.merged }}
+          PR_BASE: ${{ github.event.pull_request.base.ref }}
+          PR_HEAD: ${{ github.event.pull_request.head.ref }}
+          FORMATO_RAMA: ${{ inputs.formato_rama || 'issue/<n>' }}
+        run: |
+          set -euo pipefail
+
+          if [ "$PR_BASE" != "dev" ]; then
+            echo "La rama base del PR no es 'dev' ($PR_BASE). Finaliza sin cambios."
+            echo "actualizar=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Validar que contenga exactamente un marcador <n>
+          if [[ "$FORMATO_RAMA" != *"<n>"* ]]; then
+            echo "::error::El input formato_rama debe contener exactamente un marcador '<n>': '$FORMATO_RAMA'"
+            exit 1
+          fi
+
+          CANT_MARCADORES=$( (grep -o "<n>" <<< "$FORMATO_RAMA" || true) | wc -l )
+          if [ "$CANT_MARCADORES" -ne 1 ]; then
+            echo "::error::El input formato_rama debe contener exactamente un marcador '<n>': '$FORMATO_RAMA'"
+            exit 1
+          fi
+
+          # Escapar metacaracteres de regex en prefijo y sufijo
+          escape_regex() {
+            sed -e 's/[][\/.^$*?+()|{}]/\\&/g' <<< "$1"
+          }
+
+          RAW_PREFIX="${FORMATO_RAMA%%<n>*}"
+          RAW_SUFFIX="${FORMATO_RAMA##*<n>}"
+          ESCAPED_PREFIX=$(escape_regex "$RAW_PREFIX")
+          ESCAPED_SUFFIX=$(escape_regex "$RAW_SUFFIX")
+          REGEX="^${ESCAPED_PREFIX}([1-9][0-9]*)${ESCAPED_SUFFIX}$"
+
+          if [[ ! "$PR_HEAD" =~ $REGEX ]]; then
+            echo "La rama head '$PR_HEAD' no coincide con el formato esperado '$FORMATO_RAMA'. Finaliza sin cambios."
+            echo "actualizar=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          ISSUE_NUMBER="${BASH_REMATCH[1]}"
+          echo "Número de issue detectado: $ISSUE_NUMBER"
+
+          TARGET_OPTION_ID=""
+          case "$PR_ACTION" in
+            opened|reopened)
+              if [ "$PR_DRAFT" = "true" ]; then
+                echo "El PR es borrador (draft). Finaliza sin cambios."
+                echo "actualizar=false" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              TARGET_OPTION_ID="40b8d040" # To be reviewed / In review
+              ;;
+            ready_for_review)
+              TARGET_OPTION_ID="40b8d040" # To be reviewed / In review
+              ;;
+            closed)
+              if [ "$PR_MERGED" != "true" ]; then
+                echo "El PR fue cerrado sin merge. Finaliza sin cambios."
+                echo "actualizar=false" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              TARGET_OPTION_ID="5084b7fe" # To be deployed
+              ;;
+            *)
+              echo "Acción de PR no considerada ($PR_ACTION). Finaliza sin cambios."
+              echo "actualizar=false" >> "$GITHUB_OUTPUT"
+              exit 0
+              ;;
+          esac
+
+          echo "actualizar=true" >> "$GITHUB_OUTPUT"
+          echo "issue_number=$ISSUE_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "target_option_id=$TARGET_OPTION_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Validar secretos de GitHub App
+        if: steps.evaluar.outputs.actualizar == 'true'
+        env:
+          APP_ID: ${{ secrets.PROJECT_16_APP_ID }}
+          APP_KEY: ${{ secrets.PROJECT_16_APP_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${APP_ID:-}" ] || [ -z "${APP_KEY:-}" ]; then
+            echo "::error::Faltan los secretos de organización PROJECT_16_APP_ID y/o PROJECT_16_APP_PRIVATE_KEY requeridos para autenticar contra el Project 16."
+            exit 1
+          fi
+
+      - name: Generar token de GitHub App para Project 16
+        if: steps.evaluar.outputs.actualizar == 'true'
+        id: app_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.PROJECT_16_APP_ID }}
+          private-key: ${{ secrets.PROJECT_16_APP_PRIVATE_KEY }}
+          owner: datoscohen
+
+      - name: Consultar y actualizar Status en Project 16
+        if: steps.evaluar.outputs.actualizar == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app_token.outputs.token }}
+          ISSUE_NUMBER: ${{ steps.evaluar.outputs.issue_number }}
+          TARGET_STATUS_OPTION_ID: ${{ steps.evaluar.outputs.target_option_id }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          PROJECT_NODE_ID: "PVT_kwDOApbrds4AO9aX"
+          STATUS_FIELD_NODE_ID: "PVTSSF_lADOApbrds4AO9aXzgJjJeU"
+          STATUS_DONE_OPTION_ID: "98236657"
+        run: |
+          set -euo pipefail
+
+          # Verificar primero acceso y permisos de edición sobre el Project 16
+          CHECK_QUERY='query($id: ID!) {
+            node(id: $id) {
+              ... on ProjectV2 {
+                id
+                title
+                viewerCanUpdate
+              }
+            }
+          }'
+          PROJECT_CHECK=$(gh api graphql \
+            -f query="$CHECK_QUERY" \
+            -F id="$PROJECT_NODE_ID" 2>&1) || {
+            echo "::error::El token no tiene permisos suficientes para consultar el Project 16 ($PROJECT_NODE_ID): $PROJECT_CHECK"
+            exit 1
+          }
+
+          PROJECT_EXISTS=$(echo "$PROJECT_CHECK" | jq -r '.data.node.id // empty')
+          if [ "$PROJECT_EXISTS" != "$PROJECT_NODE_ID" ]; then
+            echo "::error::No se pudo resolver el Project 16 ($PROJECT_NODE_ID). Respuesta: $PROJECT_CHECK"
+            exit 1
+          fi
+
+          CAN_UPDATE=$(echo "$PROJECT_CHECK" | jq -r '.data.node.viewerCanUpdate // false')
+          if [ "$CAN_UPDATE" != "true" ]; then
+            echo "::error::El token no tiene permisos de edición (viewerCanUpdate=false) sobre el Project 16 ($PROJECT_NODE_ID)."
+            exit 1
+          fi
+
+          # Consultar los projectItems asociados al issue
+          QUERY='query($owner: String!, $repo: String!, $number: Int!) {
+            repository(owner: $owner, name: $repo) {
+              issue(number: $number) {
+                projectItems(first: 100) {
+                  nodes {
+                    id
+                    project {
+                      id
+                    }
+                    fieldValueByName(name: "Status") {
+                      ... on ProjectV2ItemFieldSingleSelectValue {
+                        optionId
+                        name
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }'
+
+          RESPONSE=$(gh api graphql \
+            -f query="$QUERY" \
+            -F owner="$REPO_OWNER" \
+            -F repo="$REPO_NAME" \
+            -F number="$ISSUE_NUMBER" 2>&1) || {
+            echo "::error::Falló la consulta GraphQL de los projectItems del issue #$ISSUE_NUMBER: $RESPONSE"
+            exit 1
+          }
+
+          ITEM_DATA=$(echo "$RESPONSE" | jq -r --arg projId "$PROJECT_NODE_ID" '
+            .data.repository.issue.projectItems.nodes[]? | select(.project.id == $projId)
+          ')
+
+          if [ -z "$ITEM_DATA" ]; then
+            echo "El issue #$ISSUE_NUMBER no está en el Project 16 ($PROJECT_NODE_ID). Finaliza sin cambios."
+            exit 0
+          fi
+
+          ITEM_ID=$(echo "$ITEM_DATA" | jq -r '.id')
+          CURRENT_STATUS_OPTION_ID=$(echo "$ITEM_DATA" | jq -r '.fieldValueByName.optionId // empty')
+          CURRENT_STATUS_NAME=$(echo "$ITEM_DATA" | jq -r '.fieldValueByName.name // empty')
+
+          if [ "$TARGET_STATUS_OPTION_ID" = "5084b7fe" ] && [ "$CURRENT_STATUS_OPTION_ID" = "$STATUS_DONE_OPTION_ID" ]; then
+            echo "El issue #$ISSUE_NUMBER ya está en 'Done'. No se retrocede a 'To be deployed'. Finaliza sin cambios."
+            exit 0
+          fi
+
+          if [ "$CURRENT_STATUS_OPTION_ID" = "$TARGET_STATUS_OPTION_ID" ]; then
+            echo "El issue #$ISSUE_NUMBER ya tiene el estado objetivo ($CURRENT_STATUS_NAME). Finaliza sin cambios."
+            exit 0
+          fi
+
+          MUTATION='mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+            updateProjectV2ItemFieldValue(input: {
+              projectId: $projectId
+              itemId: $itemId
+              fieldId: $fieldId
+              value: { singleSelectOptionId: $optionId }
+            }) {
+              projectV2Item {
+                id
+              }
+            }
+          }'
+
+          MUTATION_RESPONSE=$(gh api graphql \
+            -f query="$MUTATION" \
+            -F projectId="$PROJECT_NODE_ID" \
+            -F itemId="$ITEM_ID" \
+            -F fieldId="$STATUS_FIELD_NODE_ID" \
+            -F optionId="$TARGET_STATUS_OPTION_ID" 2>&1) || {
+            echo "::error::Falló la mutación en el Project 16: $MUTATION_RESPONSE"
+            exit 1
+          }
+
+          echo "Estado del issue #$ISSUE_NUMBER actualizado correctamente en Project 16."
